@@ -51,6 +51,7 @@ class Admin:
         self.courses=[]
         nb=Notebook()
         nb.pack(fill="both", expand=True)
+        
         F1=Frame(bg="#bde0fe")
         F1.pack(fill="both", expand=True)
         f11=Frame(F1,bg="#bde0fe")
@@ -71,6 +72,9 @@ class Admin:
         self.tree.grid(row=3,column=1)
         self.getcoursees()
         nb.add(F1,text="Add Course") 
+
+
+
         F2=Frame(bg="#bde0fe")
         F2.pack(fill="both", expand=True)
         f22=Frame(F2,bg="#bde0fe")
