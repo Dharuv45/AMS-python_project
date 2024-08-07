@@ -9,6 +9,7 @@ class Admin:
         self.root1.geometry(f"{self.root1.winfo_screenwidth()}x{self.root1.winfo_screenheight()}")
         self.view()
         self.root1.mainloop()
+
     def addcourse(self):
         db = sqlite3.connect("attendancesystem.db")
         cr = db.cursor()
@@ -22,6 +23,7 @@ class Admin:
             db.close()
             messagebox.showinfo("Success","Course added successfully")
             self.getcoursees()
+
     def addteacher(self):
         db = sqlite3.connect("attendancesystem.db")
         cr = db.cursor()
@@ -35,7 +37,8 @@ class Admin:
             db.commit()
             db.close()
             messagebox.showinfo("Success"," added successfully")
-            self.getcoursees()        
+            self.getcoursees()  
+                  
     def getcoursees(self):
         for i in self.tree.get_children():
             self.tree.delete(i)
