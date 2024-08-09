@@ -3,43 +3,42 @@ import sqlite3
 from tkinter import messagebox
 from tkinter.ttk import Notebook
 from admin import *
-from teacher import adddetails
-from studentpanel import StudentPanel  # Import the StudentPanel class
-
+from teacher import *
+from studentpanel import *
 class Main:
     def __init__(self):
         self.root=Tk()
         self.root.geometry(f'{self.root.winfo_screenwidth()}x{self.root.winfo_screenheight()}')
         self.view()
         self.root.mainloop()
+
     def adminlogin(self):
         db=sqlite3.connect("attendancesystem.db")
         cr=db.cursor()
-        cr.execute(f'''select * from Admin where email=
-                   '{self.adminemail.get()}' and
-                   password='{self.adminpass.get()}' ''')
+        cr.execute(f'''select * from Admin where Email='{self.adminemail.get()}' and Password='{self.adminpass.get()}' ''')
         data=cr.fetchone()
         print(data)
         if data:
-            messagebox.showinfo("Success","Welcome")
+            messagebox.showinfo("Success",'welcome')
             self.root.destroy()
             obj=Admin()
         else:
-            messagebox.showerror("Error","Wrong Credentials")
+            messagebox.showerror("Error","wronginfo")
+
+
     def teacherlog(self):
         db=sqlite3.connect("attendancesystem.db")
         cr=db.cursor()
-        cr.execute(f'''select * from teacher where email=
-                   '{self.teacheremail.get()}' and
-                   password='{self.teacherpass.get()}' ''')
+        cr.execute(f'''select * from teacher where email='{self.teacheremail.get()}' and password='{self.teacherpass.get()}' ''')
         data=cr.fetchone()
         print(data)
         if data:
-            messagebox.showinfo("Success","Welcome")
+            messagebox.showinfo("Success",'welcome')
             self.root.destroy()
-            obj=Teacher()
+            obj=Teacher(data[1],data[2])
         else:
-            messagebox.showerror("Error","Wrong Credentials")
+            messagebox.showerror("Error","wronginfo"    )
+
     def getcourses(self):
      
         db=sqlite3.connect("attendancesystem.db")
@@ -48,6 +47,8 @@ class Main:
         data1=cr.fetchall()
         for i in data1:
             self.courses.append(i[1])
+
+
     def addstudent(self):
         db=sqlite3.connect("attendancesystem.db")
         cr=db.cursor()
@@ -67,26 +68,22 @@ class Main:
             db.commit()
             messagebox.showinfo("Success","Account Created")
             self.root7.destroy()
-    
-    def open_student_panel(self):
-        self.root.destroy()
-        StudentPanel() 
 
-    def studentlogin(self):
-        db = sqlite3.connect("attendancesystem.db")
-        cr = db.cursor()
-        cr.execute('''SELECT * FROM student WHERE email=? AND password=?''',
-                (self.studentemail.get(), self.studentpass.get()))
-        data = cr.fetchone()
+    def studentlog(self):
+        db=sqlite3.connect("attendancesystem.db")
+        cr=db.cursor()
+        cr.execute(f'''select * from student where email='{self.studentemail.get()}' and Password='{self.studentpass.get()}' ''')
+        data=cr.fetchone()
         print(data)
-        db.close()
-        
         if data:
-            self.open_student_panel()
+            messagebox.showinfo("Success",'welcome')
+            self.root.destroy()
+            obj=Student(data[1],data[2])
         else:
-            messagebox.showerror("Error", "Invalid email or password")
+            messagebox.showerror("Error","wronginfo")
+    
 
-
+   
     def studentregister(self):
         self.courses=[]
         self.gender=StringVar(value="Male")
@@ -125,13 +122,16 @@ class Main:
         l6.grid(row=6,column=0,padx=10,pady=10)
         self.combo=Combobox(f22,values=self.courses)
         self.combo.grid(row=6,column=1,padx=10,pady=10)
-        addstudent=Button(f22,text="Submit",command=self.addstudent)
+        addstudent=Button(f22,text="Add student",command=self.addstudent)
         addstudent.grid(row=7,column=1,padx=10,pady=10)
 
 
+        
     def view(self):
         nb=Notebook()
-        nb.pack(expand=True,fill='both')
+        nb.pack(expand=True,fill="both")
+        
+
         F1=Frame(bg='#0077b6')
         F1.pack(expand=True,fill='both')
         f11=Frame(F1,bg='#0077b6')
@@ -145,7 +145,7 @@ class Main:
         l2.grid(row=1,column=0,padx=10,pady=10)
         self.studentpass=Entry(f11,show='*',font=("Arial",16))
         self.studentpass.grid(row=1,column=1,padx=10,pady=10)
-        btn=Button(f11,text="Login",font=("Arial",16), command=self.studentlogin)
+        btn=Button(f11,text="Login",font=("Arial",16),command=self.studentlog)
         btn.grid(row=2,column=1,padx=10,pady=10)
         btn1=Button(f11,text="Register",font=("Arial",16),command=self.studentregister)
         btn1.grid(row=3,column=1,padx=10,pady=10)
@@ -164,7 +164,7 @@ class Main:
         l2.grid(row=1,column=0,padx=10,pady=10)
         self.teacherpass=Entry(f22,show='*',font=("Arial",16))
         self.teacherpass.grid(row=1,column=1,padx=10,pady=10)
-        btn=Button(f22,text="Login",font=("Arial",16),command=adddetails)
+        btn=Button(f22,text="Login",font=("Arial",16),command=self.teacherlog)
         btn.grid(row=2,column=1,padx=10,pady=10)
 
         nb.add(F2,text="Teacher Login")
@@ -186,7 +186,6 @@ class Main:
         btn1.grid(row=2,column=1,padx=10,pady=10)
 
         nb.add(F3,text="Admin Login")
-        
-
 obj=Main()
+
 

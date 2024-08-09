@@ -1,2 +1,1 @@
-nb = Notebook(self.root)
-        nb.pack(expand=True, fill=BOTH)
+l1=Label(f33,text="Email",font=("Arial",16),bg='#f8ad9d')
